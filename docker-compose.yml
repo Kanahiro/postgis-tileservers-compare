@@ -1,0 +1,63 @@
+version: '3'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx:/usr/share/nginx/html
+    networks:
+      - default
+  postgis:
+    image: kartoza/postgis:12.4
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASS=docker
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis-data:/var/lib/postgresql
+      - ./postgres:/usr/src/app
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tegola:
+    image: gospatial/tegola
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgis:
+        condition: service_healthy
+    volumes:
+      - ./tegola:/opt/tegola_config
+    command: --config /opt/tegola_config/config.toml serve
+    networks:
+      - default
+
+  martin:
+    image: urbica/martin
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    depends_on:
+      postgis:
+        condition: service_healthy
+    networks:
+      - default
+    volumes:
+      - ./martin:/opt/martin_config
+    command: martin --config /opt/martin_config/config.yaml
+
+volumes:
+  postgis-data:
+    driver: local
+
+networks:
+  default:
+    driver: bridge

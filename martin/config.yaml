@@ -1,0 +1,148 @@
+# The socket address to bind [default: 0.0.0.0:3000]
+listen_addresses: '0.0.0.0:3000'
+
+# Database connection string
+connection_string: 'postgres://docker:docker@postgis/postgres'
+
+# Maximum connections pool size [default: 20]
+pool_size: 20
+
+# Connection keep alive timeout [default: 75]
+keep_alive: 75
+
+# Number of web server workers
+worker_processes: 8
+
+# If a spatial table has SRID 0, then this default SRID will be used as a fallback
+default_srid: 4326
+
+# Enable watch mode
+watch: false
+
+# Trust invalid certificates. This introduces significant vulnerabilities, and should only be used as a last resort.
+danger_accept_invalid_certs: true
+
+# Associative arrays of table sources
+table_sources:
+  public.buildings:
+    # Table source id (required)
+    id: public.gis_osm_buildings_a_free_1
+
+    # Table schema (required)
+    schema: public
+
+    # Table name (required)
+    table: gis_osm_buildings_a_free_1
+
+    # Geometry SRID (required)
+    srid: 4326
+
+    # Geometry column name (required)
+    geometry_column: geom
+
+    # Feature id column name
+    id_column: gid
+
+    # An integer specifying the minimum zoom level
+    minzoom: 0
+
+    # An integer specifying the maximum zoom level. MUST be >= minzoom
+    maxzoom: 30
+
+    # The maximum extent of available map tiles. Bounds MUST define an area
+    # covered by all zoom levels. The bounds are represented in WGS:84
+    # latitude and longitude values, in the order left, bottom, right, top.
+    # Values may be integers or floating point numbers.
+    bounds: [-180.0, -90.0, 180.0, 90.0]
+
+    # Tile extent in tile coordinate space
+    extent: 4096
+
+    # Buffer distance in tile coordinate space to optionally clip geometries
+    buffer: 64
+
+    # Boolean to control if geometries should be clipped or encoded as is
+    clip_geom: true
+
+    # Geometry type
+    geometry_type: GEOMETRY
+
+    # List of columns, that should be encoded as tile properties (required)
+    properties:
+      gid: integer
+      name: string
+      fclass: string
+
+  public.roads:
+    # Table source id (required)
+    id: public.gis_osm_roads_free_1
+
+    # Table schema (required)
+    schema: public
+
+    # Table name (required)
+    table: gis_osm_roads_free_1
+
+    # Geometry SRID (required)
+    srid: 4326
+
+    # Geometry column name (required)
+    geometry_column: geom
+
+    # Feature id column name
+    id_column: gid
+
+    # An integer specifying the minimum zoom level
+    minzoom: 0
+
+    # An integer specifying the maximum zoom level. MUST be >= minzoom
+    maxzoom: 30
+
+    # The maximum extent of available map tiles. Bounds MUST define an area
+    # covered by all zoom levels. The bounds are represented in WGS:84
+    # latitude and longitude values, in the order left, bottom, right, top.
+    # Values may be integers or floating point numbers.
+    bounds: [-180.0, -90.0, 180.0, 90.0]
+
+    # Tile extent in tile coordinate space
+    extent: 4096
+
+    # Buffer distance in tile coordinate space to optionally clip geometries
+    buffer: 64
+
+    # Boolean to control if geometries should be clipped or encoded as is
+    clip_geom: true
+
+    # Geometry type
+    geometry_type: GEOMETRY
+
+    # List of columns, that should be encoded as tile properties (required)
+    properties:
+      gid: integer
+      name: string
+      fclass: string
+      maxspeed: smallint
+
+# Associative arrays of function sources
+function_sources:
+  public.function_source:
+    # Function source id (required)
+    id: public.function_source
+
+    # Schema name (required)
+    schema: public
+
+    # Function name (required)
+    function: function_source
+
+    # An integer specifying the minimum zoom level
+    minzoom: 0
+
+    # An integer specifying the maximum zoom level. MUST be >= minzoom
+    maxzoom: 30
+
+    # The maximum extent of available map tiles. Bounds MUST define an area
+    # covered by all zoom levels. The bounds are represented in WGS:84
+    # latitude and longitude values, in the order left, bottom, right, top.
+    # Values may be integers or floating point numbers.
+    bounds: [-180.0, -90.0, 180.0, 90.0]

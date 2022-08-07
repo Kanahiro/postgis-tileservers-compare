@@ -1,0 +1,86 @@
+<html lang="ja">
+    <head>
+        <title>tegola vs martin</title>
+        <script src="https://unpkg.com/maplibre-gl@2.2.0-pre.2/dist/maplibre-gl.js"></script>
+        <link
+            href="https://unpkg.com/maplibre-gl@2.2.0-pre.2/dist/maplibre-gl.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div>
+            <input name="style" type="radio" id="tegola"/><label for="tegola">tegola</label>
+            <input name="style" type="radio" id="martin" checked /><label for="martin">martin</label>
+        </div>
+        <div id="map" style="height: 95vh"></div>
+        <script>
+            const radioMartin = document.getElementById("martin");
+            const radioTegola = document.getElementById("tegola");
+            const getStyle = () => {
+                const isMartin = radioMartin.checked;
+                if (isMartin) {
+                    return {
+                        version: 8,
+                        sources:{
+                            tile: {
+                                type:'vector',
+                                url: 'http://localhost:3000/public.roads,public.buildings.json'
+                            }
+                        },
+                        layers: [
+                            {
+                                id:'roads',
+                                source:'tile',
+                                'source-layer': 'public.gis_osm_roads_free_1',
+                                type:'line'
+                            },
+                            {
+                                id:'buildings',
+                                source:'tile',
+                                'source-layer': 'public.gis_osm_buildings_a_free_1',
+                                type:'fill'
+                            },
+                        ]
+                    }
+                } else {
+                    return {
+                        version: 8,
+                        sources:{
+                            tile: {
+                                type:'vector',
+                                tiles: ['http://localhost:8080/maps/kanto/{z}/{x}/{y}.vector.pbf']
+                            }
+                        },
+                        layers: [
+                            {
+                                id:'roads',
+                                source:'tile',
+                                'source-layer': 'roads',
+                                type:'line'
+                            },
+                            {
+                                id:'buildings',
+                                source:'tile',
+                                'source-layer': 'buildings',
+                                type:'fill'
+                            },
+                        ]
+                    }
+                }
+            }
+            const map = new maplibregl.Map({
+                container: 'map',
+                center: [139.72120, 35.73273],
+                zoom: 12,
+                hash:true,
+                style: getStyle()
+            })
+            const reloadStyle = () => {
+                const style = getStyle();
+                map.setStyle(style);
+            }
+            radioTegola.onchange = reloadStyle
+            radioMartin.onchange = reloadStyle
+        </script>
+    </body>
+</html>
