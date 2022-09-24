@@ -4,7 +4,7 @@ CORSAllowedOrigin = "*"
 
 # register data providers
 [[providers]]
-name = "kanto"         # provider name is referenced from map layers (required)
+name = "japan"         # provider name is referenced from map layers (required)
 type = "postgis"      # the type of data provider. currently only supports postgis (required)
 host = "postgis"      # postgis database host (required)
 port = 5432           # postgis database port (required)
@@ -15,27 +15,27 @@ srid = 4326             # The default srid for this provider. If not provided it
 
   [[providers.layers]]
   name = "roads"
-  geometry_fieldname = "geom"
-  id_fieldname = "gid"
+  geometry_fieldname = "wkb_geometry"
+  id_fieldname = "ogc_fid"
   tablename = "gis_osm_roads_free_1"
 
   [[providers.layers]]
   name = "buildings"
-  geometry_fieldname = "geom"
-  id_fieldname = "gid"
+  geometry_fieldname = "wkb_geometry"
+  id_fieldname = "ogc_fid"
   tablename = "gis_osm_buildings_a_free_1"
 
 [[maps]]
-name = "kanto"
+name = "japan"
 center = [139.72120, 35.73273, 11.0] # set the center of the map so the user is auto navigated to Bonn
 
 
   [[maps.layers]]
-  provider_layer = "kanto.buildings"
+  provider_layer = "japan.buildings"
   min_zoom = 5
   max_zoom = 20
 
   [[maps.layers]]
-  provider_layer = "kanto.roads"
+  provider_layer = "japan.roads"
   min_zoom = 5
   max_zoom = 20

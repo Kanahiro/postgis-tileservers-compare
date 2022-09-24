@@ -26,7 +26,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
   tegola:
     image: gospatial/tegola
     ports:
@@ -39,7 +38,6 @@ services:
     command: --config /opt/tegola_config/config.toml serve
     networks:
       - default
-
   martin:
     image: urbica/martin
     restart: unless-stopped
@@ -53,6 +51,15 @@ services:
     volumes:
       - ./martin:/opt/martin_config
     command: martin --config /opt/martin_config/config.yaml
+  pg_tileserv:
+    image: pramsey/pg_tileserv
+    container_name: pg_tileserv
+    environment:
+      - DATABASE_URL=postgres://docker:docker@postgis/postgres
+    depends_on:
+      - postgis
+    ports:
+      - 7800:7800
 
 volumes:
   postgis-data:

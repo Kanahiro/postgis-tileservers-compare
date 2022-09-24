@@ -9,78 +9,122 @@
     </head>
     <body>
         <div>
-            <input name="style" type="radio" id="tegola"/><label for="tegola">tegola</label>
-            <input name="style" type="radio" id="martin" checked /><label for="martin">martin</label>
+            <input name="style" type="radio" id="tegola" /><label for="tegola"
+                >tegola</label
+            >
+            <input name="style" type="radio" id="martin" checked /><label
+                for="martin"
+                >martin</label
+            >
+            <input name="style" type="radio" id="pg_tileserv" /><label
+                for="pg_tileserv"
+                >pg_tileserv</label
+            >
         </div>
         <div id="map" style="height: 95vh"></div>
         <script>
-            const radioMartin = document.getElementById("martin");
-            const radioTegola = document.getElementById("tegola");
+            const radioMartin = document.getElementById('martin');
+            const radioTegola = document.getElementById('tegola');
+            const radioPgTileserv = document.getElementById('pg_tileserv');
             const getStyle = () => {
-                const isMartin = radioMartin.checked;
-                if (isMartin) {
+                if (radioMartin.checked) {
                     return {
                         version: 8,
-                        sources:{
+                        sources: {
                             tile: {
-                                type:'vector',
-                                url: 'http://localhost:3000/public.roads,public.buildings.json'
-                            }
+                                type: 'vector',
+                                tiles: [
+                                    'http://localhost:3000/public.roads,public.buildings/{z}/{x}/{y}.pbf',
+                                ],
+                            },
                         },
                         layers: [
                             {
-                                id:'roads',
-                                source:'tile',
+                                id: 'roads',
+                                source: 'tile',
                                 'source-layer': 'public.gis_osm_roads_free_1',
-                                type:'line'
+                                type: 'line',
                             },
                             {
-                                id:'buildings',
-                                source:'tile',
-                                'source-layer': 'public.gis_osm_buildings_a_free_1',
-                                type:'fill'
+                                id: 'buildings',
+                                source: 'tile',
+                                'source-layer':
+                                    'public.gis_osm_buildings_a_free_1',
+                                type: 'fill',
                             },
-                        ]
-                    }
-                } else {
+                        ],
+                    };
+                }
+                if (radioTegola.checked) {
                     return {
                         version: 8,
-                        sources:{
+                        sources: {
                             tile: {
-                                type:'vector',
-                                tiles: ['http://localhost:8080/maps/kanto/{z}/{x}/{y}.vector.pbf']
-                            }
+                                type: 'vector',
+                                tiles: [
+                                    'http://localhost:8080/maps/japan/{z}/{x}/{y}.vector.pbf',
+                                ],
+                            },
                         },
                         layers: [
                             {
-                                id:'roads',
-                                source:'tile',
+                                id: 'roads',
+                                source: 'tile',
                                 'source-layer': 'roads',
-                                type:'line'
+                                type: 'line',
                             },
                             {
-                                id:'buildings',
-                                source:'tile',
+                                id: 'buildings',
+                                source: 'tile',
                                 'source-layer': 'buildings',
-                                type:'fill'
+                                type: 'fill',
                             },
-                        ]
-                    }
+                        ],
+                    };
                 }
-            }
+                if (radioPgTileserv.checked) {
+                    return {
+                        version: 8,
+                        sources: {
+                            tile: {
+                                type: 'vector',
+                                tiles: [
+                                    'http://localhost:7800/public.gis_osm_buildings_a_free_1,public.gis_osm_roads_free_1/{z}/{x}/{y}.vector.pbf?limit=10000',
+                                ],
+                            },
+                        },
+                        layers: [
+                            {
+                                id: 'roads',
+                                source: 'tile',
+                                'source-layer': 'public.gis_osm_roads_free_1',
+                                type: 'line',
+                            },
+                            {
+                                id: 'buildings',
+                                source: 'tile',
+                                'source-layer':
+                                    'public.gis_osm_buildings_a_free_1',
+                                type: 'fill',
+                            },
+                        ],
+                    };
+                }
+            };
             const map = new maplibregl.Map({
                 container: 'map',
-                center: [139.72120, 35.73273],
+                center: [139.7212, 35.73273],
                 zoom: 12,
-                hash:true,
-                style: getStyle()
-            })
+                hash: true,
+                style: getStyle(),
+            });
             const reloadStyle = () => {
                 const style = getStyle();
                 map.setStyle(style);
-            }
-            radioTegola.onchange = reloadStyle
-            radioMartin.onchange = reloadStyle
+            };
+            radioTegola.onchange = reloadStyle;
+            radioMartin.onchange = reloadStyle;
+            radioPgTileserv.onchange = reloadStyle;
         </script>
     </body>
 </html>
