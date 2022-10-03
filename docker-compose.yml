@@ -57,7 +57,10 @@ services:
     environment:
       - DATABASE_URL=postgres://docker:docker@postgis/postgres
     depends_on:
-      - postgis
+      postgis:
+        condition: service_healthy
+    networks:
+      - default
     ports:
       - 7800:7800
 
